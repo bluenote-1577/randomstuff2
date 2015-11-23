@@ -15,6 +15,7 @@ import org.json.simple.parser.JSONParser;
 // TODO: This class represents the Restaurant Database.
 // Define the internal representation and 
 // state the rep invariant and the abstraction function.
+//-add containers for reviews and users
 
 public class RestaurantDB {
 
@@ -65,7 +66,9 @@ public class RestaurantDB {
 		return restaurantDB.get(businessID).toString();
 	}
 
-	
+	/**
+	 * called on initialization to scan the restaurants into our database
+	 */
 	private void scanRestaurants() {
 		JSONParser parser = new JSONParser();
 

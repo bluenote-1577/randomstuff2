@@ -8,12 +8,19 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-// TODO: Implement a server that will instantiate a database, 
+// TODO: Implement a server that will instantiate a restaurantData, 
 // process queries concurrently, etc.
+
+/**
+ * 
+ * @author Jim
+ * to connect, open console and type in "telnet localhost 6969" after
+ * starting this file.
+ */
 
 public class RestaurantDBServer {
 
-	private RestaurantDB database;
+	private RestaurantDB restaurantData;
 	private ServerSocket socket;
 
 	/**
@@ -32,7 +39,7 @@ public class RestaurantDBServer {
 	 */
 	public RestaurantDBServer(int port, String restaurantJSONfilename, String reviewsJSONfilename,
 			String usersJSONfilename) throws IOException {
-		database = new RestaurantDB(restaurantJSONfilename, reviewsJSONfilename, usersJSONfilename);
+		restaurantData = new RestaurantDB(restaurantJSONfilename, reviewsJSONfilename, usersJSONfilename);
 		socket = new ServerSocket(port);
 		// TODO: See the problem statement for what the arguments are.
 		// TODO: Rename the arguments suitably.
@@ -46,11 +53,15 @@ public class RestaurantDBServer {
 	 *         businessID is not valid
 	 */
 	public String getRestaurant(String businessID) {
-		synchronized (database) {
-			return database.getRestaurant(businessID);
+		synchronized (restaurantData) {
+			return restaurantData.getRestaurant(businessID);
 		}
 	}
 
+	/**
+	 * Initializes the server and listens for clients to connect.
+	 * @throws IOException
+	 */
 	public void startServer() throws IOException {
 		
 		while (true) {
@@ -74,7 +85,13 @@ public class RestaurantDBServer {
 		}
 	}
 
-	public void process(Socket socket) throws IOException {
+	/**
+	 * Processes the client queries after they've connected.
+	 * 
+	 * @param socket the accepted socket from the client
+	 * @throws IOException if sockets are malformed
+	 */
+	private void process(Socket socket) throws IOException {
 		System.err.println("client connected");
 
 		BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
