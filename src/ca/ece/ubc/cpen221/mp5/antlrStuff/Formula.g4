@@ -35,7 +35,7 @@ RPAREN : ')' ;
 AND : '&&' ;
 WHITESPACE : [ \t\r\n]+ -> skip ;
 OR : '||' ;
-STRING : [a-zA-Z] [a-zA-Z0-9]* ;
+STRING : [a-zA-Z0-9] [a-zA-Z0-9' ']* ;
 
 /*
  * These are the parser rules. They define the structures used by the parser.

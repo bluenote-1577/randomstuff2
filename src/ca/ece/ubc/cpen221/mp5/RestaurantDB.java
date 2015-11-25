@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Set;
@@ -11,6 +12,8 @@ import java.util.Set;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+
+import ca.ece.ubc.cpen221.mp5.antlrStuff.AtomTypes;
 
 // TODO: This class represents the Restaurant Database.
 // Define the internal representation and 
@@ -49,20 +52,71 @@ public class RestaurantDB {
 		scanRestaurants();
 	}
 
-	public Set<Restaurant> query(String queryString) {
-		// TODO: Implement this method
-		// Write specs, etc.
-		return null;
+	public Set<Restaurant> query(String queryString, AtomTypes type) {
+		Set<Restaurant> toReturn = new HashSet<Restaurant>();
+
+		if (type == AtomTypes.IN) {
+			return null;
+		}
+
+		else if (type == AtomTypes.CATEGORY) {
+			return null;
+		}
+
+		else if (type == AtomTypes.PRICE) {
+			return null;
+		}
+
+		else if (type == AtomTypes.RATING) {
+			if (queryString.matches("[\"1-5\"][\\\\.][\\\\.][\"1-5\"]")) {
+				//the 0th and 3rd index represents the digits, and we 
+				//use Character.digit instead of casting because for some reason
+				//casting gives us the wrong answer.
+				double number1 =  Character.digit(queryString.charAt(0),10);
+				double number2 = Character.digit(queryString.charAt(3),10);
+			//	System.out.println(number1); testing
+			//	System.out.println(number2);
+				for (Restaurant restaurant : restaurantDB.values()) {
+					if(restaurant.getRating() <= number2 
+							&& restaurant.getRating() >=number1){
+						toReturn.add(restaurant);
+					}
+				}
+				
+				return toReturn;
+			}
+			//returns null if it doesn't match the regex
+			else return null;
+		}
+
+		else if (type == AtomTypes.NAME) {
+			for (Restaurant restaurant : restaurantDB.values()) {
+				if (restaurant.getName().equals(queryString)) {
+					toReturn.add(restaurant);
+				}
+			}
+			;
+
+			return toReturn;
+		}
+
+		throw new RuntimeException("shouldn't be here");
+
 	}
-	
+
 	/**
-	 * This method obtains the restaurant information in JSON format given a valid business ID.
-	 * @param businessID the id of the business
-	 * @return the string representing the restaurant in JSON format or an error message
+	 * This method obtains the restaurant information in JSON format given a
+	 * valid business ID.
+	 * 
+	 * @param businessID
+	 *            the id of the business
+	 * @return the string representing the restaurant in JSON format or an error
+	 *         message
 	 */
-	public String getRestaurant(String businessID){
-		if(restaurantDB.get(businessID) == null) return "Not a valid business ID.";
-		
+	public String getRestaurant(String businessID) {
+		if (restaurantDB.get(businessID) == null)
+			return "Not a valid business ID.";
+
 		return restaurantDB.get(businessID).toString();
 	}
 
@@ -77,15 +131,14 @@ public class RestaurantDB {
 			String line = restaurantReader.readLine();
 			while (line != null) {
 				JSONObject restaurantInfo = (JSONObject) parser.parse(line);
-				restaurantDB.put((String) restaurantInfo.get
-						("business_id"), new Restaurant(line,restaurantInfo));
+				restaurantDB.put((String) restaurantInfo.get("business_id"), new Restaurant(line, restaurantInfo));
 				line = restaurantReader.readLine();
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 }

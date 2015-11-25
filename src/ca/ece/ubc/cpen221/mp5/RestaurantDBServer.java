@@ -96,7 +96,7 @@ public class RestaurantDBServer {
 
 		BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
-
+		out.println("Enter query, or q to exit");
 		while (true) {
 
 			String query = in.readLine();
